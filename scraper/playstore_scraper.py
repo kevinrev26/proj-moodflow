@@ -1,12 +1,5 @@
 from google_play_scraper import search
-# import requests
-# from bs4 import BeautifulSoup
-from urllib.parse import urljoin
-# import asyncio
-from pyppeteer import launch
-# from typing import Dict, List
 
-BASE_CATEGORY_URL = "https://play.google.com/store/apps/category/"
 
 TABS = {
     "Top free": "Top free",
@@ -23,24 +16,7 @@ def scrape_play_store_search(search_term: str):
     )
     return result
 
-async def category(category: str, lang: str = "en", country: str = "us"):
-    url = BASE_CATEGORY_URL + category
-
-    browser = await launch(
-        headless=True,
-        executablePath='/home/kevinrev26/.local/share/pyppeteer/local-chromium/1181205/chrome-linux/chrome',
-        args=[
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-gpu',
-            '--disable-dev-shm-usage',
-            '--no-zygote',
-            '--single-process',
-            '--disable-extensions',
-        ],
-        autoClose = False
-    )
-    page = await browser.newPage()
+async def category(filter, url, page):
     print(f"Navigating to {url}")
     await page.goto(url, {'waitUntil': 'networkidle2'})
     await page.waitForSelector('div[role="tablist"]')
@@ -62,20 +38,23 @@ async def category(category: str, lang: str = "en", country: str = "us"):
         # await page.waitForTimeout(3000)  # Wait for async content to load
 
         # Wait for the app grid to appear
-        await page.waitForSelector('a[href*="/store/apps/details?id="]')
+        try:
+            await page.waitForSelector('a[href*="/store/apps/details?id="]')
 
-        # Evaluate and extract links
-        links = await page.evaluate('''() => {
-            const anchors = Array.from(document.querySelectorAll('a[href*="/store/apps/details?id="]'));
-            const urls = anchors.map(a => a.href);
-            //return [...new Set(urls)];  // Deduplicate
-            return urls
-        }''')
+            # Evaluate and extract links
+            links = await page.evaluate('''() => {
+                const anchors = Array.from(document.querySelectorAll('a[href*="/store/apps/details?id="]'));
+                const urls = anchors.map(a => a.href);
+                //return [...new Set(urls)];  // Deduplicate
+                return urls
+            }''')
 
-        print(f"Found {len(links)} apps.")
-        results[tab_name] = links[20:]
+            print(f"Found {len(links)} apps.")
+        except TimeoutError:
+            print("Selector not found, returning empty list")
+            links = []
+        results[tab_name] = links[filter:]
 
-    await browser.close()
     return results
 
     # print(BASE_URL)
