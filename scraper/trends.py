@@ -35,9 +35,6 @@ async def get_playstore_urls():
     await browser.close()
 
     data = format_app_ids(leaderboard)
-
-    # with open('leaderboard.json', 'w') as file:
-    #     json.dump(data, file, indent=4)
     print("Getting database client!")
     db = get_database()
     process_leaderboard_json(db, data)
@@ -118,18 +115,7 @@ def process_leaderboard_json(db, leaderboard_data, hours_elapsed=6):
                                 "trend_score": trend_score
                             }}
                         )
-                    else:
-                        collection.update_one(
-                            {"_id": existing["_id"]},
-                            {"$set": {
-                                "previous_rank": previous_rank,
-                                "current_rank": current_rank,
-                                "last_updated": now,
-                                "trend_score": trend_score
-                            }}
-                        )
-                else:
-                    
+                else:                    
                     try:
                         metadata = app(app_id)
                         new_doc = {
