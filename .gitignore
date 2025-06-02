@@ -3,3 +3,4 @@ __pycache__
 config/
 .env
 leaderboard.json
+mood/db.sqlite3
