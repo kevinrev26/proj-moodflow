@@ -2,9 +2,9 @@ from google_play_scraper import search
 
 
 TABS = {
-    "Top free": "Top free",
-    "Top grossing": "Top grossing",
-    "Top paid": "Top paid"
+    "top_free": "Top free",
+    "top_grossing": "Top grossing",
+    "top_paid": "Top paid"
 }
 
 def scrape_play_store_search(search_term: str):
@@ -30,12 +30,8 @@ async def category(filter, url, page):
 
         tab_selector = f'div[role="button"][aria-label="{aria_label}"]'
         await page.waitForSelector(tab_selector, {'visible': True})
-        print("Waiting for tab selector")
         await page.querySelectorEval(tab_selector, 'el => el.click()')
-        print("Clicking on tab element")
         await page.waitFor(3000)
-        print("Content should be loaded")
-        # await page.waitForTimeout(3000)  # Wait for async content to load
 
         # Wait for the app grid to appear
         try:
@@ -57,24 +53,3 @@ async def category(filter, url, page):
 
     return results
 
-    # print(BASE_URL)
-    # response = requests.get(BASE_URL)
-    # soup = BeautifulSoup(response.text, "html.parser")
-    # links = soup.find_all("a", href=True)
-
-    # public_urls = set()
-
-    # with open('play.html', '+a') as html_file:
-    #     html_file.write(response.text)
-    #     print('Done!')
-
-    # for link in links:
-    #     href = link['href']
-    #     if href.startswith("/store/apps/details"):
-    #         full_url = urljoin(BASE_URL, href)
-    #         public_urls.add(full_url)
-
-    # # Print unique public URLs
-    # print("\n📎 Discovered Public URLs:")
-    # for url in sorted(public_urls):
-    #     print(url)
