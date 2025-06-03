@@ -41,7 +41,7 @@ async def get_playstore_urls():
     filename = MISC_CONFIG['LAST_RUN_PATH']
     try:
         with open(filename, "r") as f:
-            elapsed = datetime.fromisoformat(f.read().strip())
+            last_time = datetime.fromisoformat(f.read().strip())
     except (FileNotFoundError, ValueError):
         last_time = None
 
