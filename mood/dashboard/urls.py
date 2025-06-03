@@ -14,6 +14,7 @@ GET /api/scrape
 '''
 
 urlpatterns = [
+    # Get active categories, top 5 most trending apps, total apps tracked
     path('v1/summary/', views.Summary.as_view()),
     # Top apps per trend_score
     path('v1/apps/trending/', views.top_trending_apps),
