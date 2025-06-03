@@ -53,11 +53,11 @@ def get_percentiles(db):
 
     return percentiles
 
-def get_top_five_apps(db):
+def get_top_apps(db, top=5):
     highest_scores = []
     for category in db.list_collection_names():
         app = list(db[category].find({'trend_score': {'$gt':0}}).sort("trend_score").limit(1))[0]
         del app['_id']
         highest_scores.append(app)
     sorted_apps = sorted(highest_scores, key=lambda x: x['trend_score'], reverse=True)
-    return sorted_apps[:5]
+    return sorted_apps[:top]
