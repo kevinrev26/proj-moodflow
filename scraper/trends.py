@@ -1,7 +1,7 @@
 from .constants import category_list
 import asyncio, random
 from pyppeteer import launch
-from config.settings import PUPPETEER_CONFIG
+from config.settings import PUPPETEER_CONFIG, MISC_CONFIG
 from .playstore_scraper import category
 from .db import get_database
 from google_play_scraper import app
@@ -37,7 +37,22 @@ async def get_playstore_urls():
     data = format_app_ids(leaderboard)
     print("Getting database client!")
     db = get_database()
-    process_leaderboard_json(db, data)
+    elapsed = 6
+    filename = MISC_CONFIG['LAST_RUN_PATH']
+    try:
+        with open(filename, "r") as f:
+            elapsed = datetime.fromisoformat(f.read().strip())
+    except (FileNotFoundError, ValueError):
+        last_time = None
+
+    if last_time:
+        elapsed = (now - last_time).total_seconds() / 3600
+
+    with open(filename, "w") as f:
+        f.write(now.isoformat())
+    
+    print(f"{elapsed} hours have passed since last run")
+    process_leaderboard_json(db, data, elapsed)
     print("Finished! Database updated")
 
 def format_app_ids(datum: dict):

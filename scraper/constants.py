@@ -1,5 +1,10 @@
 from dataclasses import dataclass
 
+TABS = ['top_free', 'top_grossing', 'top_paid']
+
+MIN_ACTIVE_APPS = 3
+TREND_THRESHOLD = 60
+
 @dataclass
 class CategoryConfig:
     name: str

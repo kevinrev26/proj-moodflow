@@ -4,3 +4,4 @@ config/
 .env
 leaderboard.json
 mood/db.sqlite3
+plots
