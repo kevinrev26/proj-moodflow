@@ -5,6 +5,7 @@ from rest_framework import status
 from datetime import datetime, timezone
 from google_play_scraper import app
 from scraper.db import get_database
+from scraper.constants import TABS
 from .models import App, AppSnapshot
 from .serializers import AppSerializer, AppSnapshotSerializer
 
@@ -82,3 +83,46 @@ def app_details(_, app_id):
             'description' : metadata.get('description'),
             'icon_url': metadata.get('icon'),
         }, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def category_details(_, category):
+    db = get_database()
+    collection = db[category]
+    
+    if collection is None:
+        Response({"msg": "Category not found"}, status=status.HTTP_204_NO_CONTENT)
+
+    # For top apps
+    pipeline = [
+        {
+            "$setWindowFields": {
+                "partitionBy": "$top_type",
+                "sortBy" : {"trend_score": -1},
+                "output": {
+                    "rank": {"$documentNumber": {}}
+                }
+            }
+        },
+        {"$match": {"rank": {"$lte": 10}}}
+    ]
+
+    results = list(collection.aggregate(pipeline))
+    for app in results:
+        del app['_id']
+
+    # for trend_scores
+    pipeline = [
+        {"$match": {
+            "category": category,
+            "trend_score": {"$gt": 0}
+        }},
+        {"$group": {
+            "_id": "$top_type",
+            "scores": {"$push": "$trend_score"}
+        }}
+    ]
+
+    results = collection.aggregate(pipeline)
+
+    trend_scores_by_type = {doc['_id']: doc['scores'] for doc in results}
+    return Response({"top": results, "scores" : trend_scores_by_type}, status=status.HTTP_200_OK)

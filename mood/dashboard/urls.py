@@ -3,12 +3,6 @@ from dashboard import views
 
 '''
 Proposed endpoints
-GET /api/category/<category_name>/trending
-    Top apps en tendencia por categoría
-GET /api/category/<category_name>/distribution
-    Distribución de trend_score para la categoría
-GET /api/app/<app_id>
-    Detalles históricos y actuales de una app
 GET /api/search?term=photo+editor
     Trigger search for a term (apps/games).
 GET /api/app/{app_id}/sentiment-summary
@@ -24,5 +18,7 @@ urlpatterns = [
     # Top apps per trend_score
     path('v1/apps/trending/', views.top_trending_apps),
     # Historical and current app details
-    path("v1/app/<str:app_id>/", views.app_details)
+    path("v1/app/<str:app_id>/", views.app_details),
+    # Category details, apps and trend_scores
+    path('v1/category/<str:category>/', views.category_details)
 ]
