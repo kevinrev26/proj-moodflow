@@ -19,9 +19,9 @@
 </script>
 
     {#if loading}
-    <p>Loading summary...</p>
+        <p>Loading summary...</p>
     {:else if error}
-    <p>Error: {error}</p>
+        <p>Error: {error}</p>
     {:else}
     <section>
         <h2>📊 MoodFlow Summary</h2>
