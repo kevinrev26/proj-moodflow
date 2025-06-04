@@ -1,2 +1,3 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<!-- src/routes/+page.svelte -->
+<h2>Welcome to MoodFlow</h2>
+<p>Select an option from the sidebar to begin exploring trending apps.</p>
