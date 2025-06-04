@@ -106,8 +106,8 @@ def category_details(_, category):
         {"$match": {"rank": {"$lte": 10}}}
     ]
 
-    results = list(collection.aggregate(pipeline))
-    for app in results:
+    top_apps = list(collection.aggregate(pipeline))
+    for app in top_apps:
         del app['_id']
 
     # for trend_scores
@@ -125,4 +125,4 @@ def category_details(_, category):
     results = collection.aggregate(pipeline)
 
     trend_scores_by_type = {doc['_id']: doc['scores'] for doc in results}
-    return Response({"top": results, "scores" : trend_scores_by_type}, status=status.HTTP_200_OK)
+    return Response({"top": top_apps, "scores" : trend_scores_by_type}, status=status.HTTP_200_OK)
