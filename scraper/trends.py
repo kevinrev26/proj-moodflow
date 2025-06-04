@@ -47,12 +47,11 @@ async def get_playstore_urls():
 
     if last_time:
         elapsed = (now - last_time).total_seconds() / 3600
-
-    with open(filename, "w") as f:
-        f.write(now.isoformat())
     
     print(f"{elapsed} hours have passed since last run")
     process_leaderboard_json(db, data, elapsed)
+    with open(filename, "w") as f:
+        f.write(now.isoformat())
     print("Finished! Database updated")
 
 def format_app_ids(datum: dict):
