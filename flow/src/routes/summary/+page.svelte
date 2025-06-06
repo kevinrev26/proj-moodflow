@@ -41,7 +41,7 @@
             <li>
             <strong>{app.title}</strong> ({app.category}, {app.top_type})<br />
             Trend Score: {app.trend_score.toFixed(2)}<br />
-            Installs: {app.installs} | Rating: {app.score.toFixed(2)} ({app.ratings} ratings)
+            Installs: {app.installs} | Rating: {app.score != null ? app.score.toFixed(2) : ''} ({app.ratings} ratings)
             </li>
         {/each}
         </ol>

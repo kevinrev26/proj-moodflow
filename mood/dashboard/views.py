@@ -56,9 +56,9 @@ def top_trending_apps(_):
             top_type=app["top_type"],
             previous_rank=app["previous_rank"],
             current_rank=app["current_rank"],
-            trend_score=app["trend_score"],
-            score=app["score"],
-            ratings=app["ratings"],
+            trend_score=app["trend_score"] or 0,
+            score=app["score"] or 0,
+            ratings=app["ratings"] or 0,
             snapshot_time=now
         )
 

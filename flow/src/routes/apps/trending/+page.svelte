@@ -34,7 +34,7 @@
             <span class="score">Trend Score: {app.trend_score.toFixed(2)}</span>
           </div>
           <p><strong>Category:</strong> {app.category} | <strong>Top Type:</strong> {app.top_type}</p>
-          <p><strong>Installs:</strong> {app.installs} | <strong>Rating:</strong> {app.score.toFixed(2)} ({app.ratings} ratings)</p>
+          <p><strong>Installs:</strong> {app.installs} | <strong>Rating:</strong> {app.score != null ? app.score.toFixed(2) : ''} ({app.ratings} ratings)</p>
           <p><strong>Rank:</strong> {app.previous_rank} → {app.current_rank}</p>
         </li>
       {/each}
