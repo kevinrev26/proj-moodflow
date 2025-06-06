@@ -39,9 +39,11 @@
         <ol>
         {#each summary.apps_most_trend_scores as app}
             <li>
-            <strong>{app.title}</strong> ({app.category}, {app.top_type})<br />
-            Trend Score: {app.trend_score.toFixed(2)}<br />
-            Installs: {app.installs} | Rating: {app.score != null ? app.score.toFixed(2) : ''} ({app.ratings} ratings)
+                <a  href={`/app/${app.app_id}`} class="card-link">
+                    <strong>{app.title}</strong> ({app.category}, {app.top_type})<br />
+                </a>
+                Trend Score: {app.trend_score.toFixed(2)}<br />
+                Installs: {app.installs} | Rating: {app.score != null ? app.score.toFixed(2) : ''} ({app.ratings} ratings)
             </li>
         {/each}
         </ol>
