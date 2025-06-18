@@ -18,7 +18,7 @@
   onMount(async () => {
     try {
       const res = await fetch(`http://127.0.0.1:8000/api/v1/app/${app_id}/`);
-      if (!res.ok) throw new Error('App not found');
+      if (!res.ok || res.status === 204) throw new Error('App not found');
       const data = await res.json();
 
       app = data.app;

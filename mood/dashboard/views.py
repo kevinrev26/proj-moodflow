@@ -9,7 +9,7 @@ from scraper.constants import TABS
 from .models import App, AppSnapshot
 from .serializers import AppSerializer, AppSnapshotSerializer
 
-from .utils import get_most_active_categories, get_percentiles, get_top_apps
+from .utils import get_most_active_categories, get_percentiles, get_top_apps, find_app_by_id
 
 # Create your views here.
 class Summary(APIView):
@@ -69,7 +69,31 @@ def app_details(_, app_id):
     metadata = app(app_id)
     app_obj = App.objects.filter(app_id=app_id).first()
     if not app_obj:
-        return Response({"msg": "App not found"}, status=status.HTTP_204_NO_CONTENT)
+        db = get_database()
+        doc =  find_app_by_id(db, app_id)
+        if not doc:
+            return Response({"msg": "App not found"}, status=status.HTTP_204_NO_CONTENT)
+        # This means, the apps has not enter in top trending apps.
+        app_defaults = {
+            "title" : metadata.get('title'),
+            "category" : doc.get("category")
+        }
+        app_obj, created_app = App.objects.get_or_create(app_id=app_id, defaults=app_defaults)
+        if created_app:
+            app_obj.save()
+        
+        #Creating snapshot
+        now = datetime.now(timezone.utc)
+        AppSnapshot.objects.create(
+            app=app_obj,
+            top_type=doc["top_type"],
+            previous_rank=doc["previous_rank"],
+            current_rank=doc["current_rank"],
+            trend_score=doc["trend_score"] or 0,
+            score=doc["score"] or 0,
+            ratings=doc["ratings"] or 0,
+            snapshot_time=now
+        )
 
     app_serializer = AppSerializer(app_obj)
     snapshots = AppSnapshot.objects.filter(app=app_obj).order_by('-snapshot_time')

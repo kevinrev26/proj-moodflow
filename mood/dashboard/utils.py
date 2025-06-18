@@ -61,3 +61,11 @@ def get_top_apps(db, top=5):
         highest_scores.append(app)
     sorted_apps = sorted(highest_scores, key=lambda x: x['trend_score'], reverse=True)
     return sorted_apps[:top]
+
+def find_app_by_id(db, app_id):
+    for category in db.list_collection_names():
+        doc = db[category].find_one({'app_id': app_id})
+        if doc:
+            return doc
+    return None
+
